@@ -47,8 +47,10 @@ export default function MainNavigator() {
 
   return (
     <Tab.Navigator
+      lazy={false}
       screenOptions={{
         headerShown: false,
+        unmountOnBlur: false,
         tabBarActiveTintColor: theme.tint,
         tabBarInactiveTintColor: theme.tabIconDefault,
         tabBarStyle: {
