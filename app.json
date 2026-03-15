@@ -9,7 +9,7 @@
       "package": "com.xodophile.workspace"
     },
     "owner": "xodophiles-organization",
-    "slug": "quantmedia",
+    "slug": "socialdashboard",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
       "infoPlist": {
