@@ -8,7 +8,7 @@
     "android": {
       "package": "com.xodophile.workspace"
     },
-    "owner": "batmansanchit",
+    "owner": "xodophiles-organization",
     "slug": "quantmedia",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
