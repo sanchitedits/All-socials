@@ -9,7 +9,7 @@
       "package": "com.xodophile.workspace"
     },
     "owner": "batmansanchit",
-    "slug": "mockup-sandbox",
+    "slug": "workspacemockup-sandbox",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
       "infoPlist": {
