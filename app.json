@@ -2,11 +2,19 @@
   "expo": {
     "extra": {
       "eas": {
-        "projectId": "80d3410d-bc7e-4923-a555-2365f0a61180"
+        "projectId": "671ed764-0bd7-46d4-9acf-88b0f31a6552"
       }
     },
     "android": {
       "package": "com.xodophile.workspace"
+    },
+    "owner": "batmansanchit",
+    "slug": "quantmedia",
+    "ios": {
+      "bundleIdentifier": "com.xodophile.workspace",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     }
   }
 }
