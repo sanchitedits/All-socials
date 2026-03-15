@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
 import React from "react";
@@ -11,27 +11,55 @@ import WebViewScreen from "@/screens/WebViewScreen";
 
 const Tab = createBottomTabNavigator();
 
-const PLATFORM_ICONS: Record<string, string> = {
-  instagram: "instagram",
-  linkedin: "linkedin",
-  x: "twitter",
-  twitter: "twitter",
-  facebook: "facebook",
-  whatsapp: "message-circle",
-  telegram: "send",
-  discord: "message-square",
-  slack: "slack",
-  snapchat: "camera",
-  tiktok: "music",
-  youtube: "youtube",
-};
+type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];
 
-function getPlatformIcon(name: string): string {
+function getPlatformIcon(name: string): { default: IoniconsName; active: IoniconsName } {
   const key = name.toLowerCase();
-  for (const [k, v] of Object.entries(PLATFORM_ICONS)) {
-    if (key.includes(k)) return v;
+
+  if (key.includes("instagram")) {
+    return { default: "logo-instagram", active: "logo-instagram" };
   }
-  return "message-circle";
+  if (key.includes("linkedin")) {
+    return { default: "logo-linkedin", active: "logo-linkedin" };
+  }
+  if (key.includes("twitter") || key.includes(" x ") || key.trim() === "x") {
+    return { default: "logo-twitter", active: "logo-twitter" };
+  }
+  if (key.includes("facebook")) {
+    return { default: "logo-facebook", active: "logo-facebook" };
+  }
+  if (key.includes("whatsapp")) {
+    return { default: "logo-whatsapp", active: "logo-whatsapp" };
+  }
+  if (key.includes("youtube")) {
+    return { default: "logo-youtube", active: "logo-youtube" };
+  }
+  if (key.includes("tiktok")) {
+    return { default: "logo-tiktok", active: "logo-tiktok" };
+  }
+  if (key.includes("snapchat")) {
+    return { default: "logo-snapchat", active: "logo-snapchat" };
+  }
+  if (key.includes("reddit")) {
+    return { default: "logo-reddit", active: "logo-reddit" };
+  }
+  if (key.includes("discord")) {
+    return { default: "logo-discord", active: "logo-discord" };
+  }
+  if (key.includes("slack")) {
+    return { default: "logo-slack", active: "logo-slack" };
+  }
+  if (key.includes("github")) {
+    return { default: "logo-github", active: "logo-github" };
+  }
+  if (key.includes("telegram")) {
+    return { default: "paper-plane-outline", active: "paper-plane" };
+  }
+  if (key.includes("message") || key.includes("chat")) {
+    return { default: "chatbubble-outline", active: "chatbubble" };
+  }
+
+  return { default: "globe-outline", active: "globe" };
 }
 
 export default function MainNavigator() {
@@ -47,7 +75,6 @@ export default function MainNavigator() {
 
   return (
     <Tab.Navigator
-      lazy={false}
       screenOptions={{
         headerShown: false,
         unmountOnBlur: false,
@@ -81,24 +108,28 @@ export default function MainNavigator() {
       }}
     >
       {platforms.map((platform) => {
-        const iconName = getPlatformIcon(platform.name);
+        const icons = getPlatformIcon(platform.name);
+        const shortTitle =
+          platform.name.length > 9
+            ? platform.name.substring(0, 8) + "\u2026"
+            : platform.name;
+
         return (
           <Tab.Screen
             key={platform.id}
             name={platform.id}
             options={{
-              title:
-                platform.name.length > 9
-                  ? platform.name.substring(0, 8) + "\u2026"
-                  : platform.name,
-              tabBarIcon: ({ color, size }) => (
-                <Feather name={iconName as any} size={size} color={color} />
+              title: shortTitle,
+              tabBarIcon: ({ color, size, focused }) => (
+                <Ionicons
+                  name={focused ? icons.active : icons.default}
+                  size={size}
+                  color={color}
+                />
               ),
             }}
           >
-            {() => (
-              <WebViewScreen url={platform.url} name={platform.name} />
-            )}
+            {() => <WebViewScreen url={platform.url} name={platform.name} />}
           </Tab.Screen>
         );
       })}
@@ -107,8 +138,12 @@ export default function MainNavigator() {
         name="__manage__"
         options={{
           title: "Manage",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="sliders" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "settings" : "settings-outline"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       >

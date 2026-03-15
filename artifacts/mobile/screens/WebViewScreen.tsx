@@ -1,7 +1,9 @@
 import { Feather } from "@expo/vector-icons";
-import React, { useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  BackHandler,
   Platform,
   Pressable,
   StyleSheet,
@@ -32,11 +34,25 @@ export default function WebViewScreen({ url, name }: Props) {
 
   const topPadding = Platform.OS === "web" ? 67 : insets.top;
 
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS !== "android") return;
+
+      const handler = BackHandler.addEventListener("hardwareBackPress", () => {
+        if (canGoBack) {
+          webViewRef.current?.goBack();
+          return true;
+        }
+        return false;
+      });
+
+      return () => handler.remove();
+    }, [canGoBack])
+  );
+
   if (Platform.OS === "web") {
     return (
-      <View
-        style={[styles.container, { backgroundColor: theme.background }]}
-      >
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <View
           style={[
             styles.header,
@@ -56,7 +72,9 @@ export default function WebViewScreen({ url, name }: Props) {
             {name}
           </Text>
         </View>
-        <View style={[styles.webFallback, { backgroundColor: theme.background }]}>
+        <View
+          style={[styles.webFallback, { backgroundColor: theme.background }]}
+        >
           <Feather name="monitor" size={48} color={theme.textSecondary} />
           <Text
             style={[
@@ -127,14 +145,22 @@ export default function WebViewScreen({ url, name }: Props) {
 
         <Pressable
           onPress={() => webViewRef.current?.reload()}
-          style={({ pressed }) => [styles.navBtn, { opacity: pressed ? 0.5 : 1 }]}
+          style={({ pressed }) => [
+            styles.navBtn,
+            { opacity: pressed ? 0.5 : 1 },
+          ]}
         >
           <Feather name="refresh-cw" size={20} color={theme.tint} />
         </Pressable>
       </View>
 
       {loading && !error && (
-        <View style={[styles.loadingOverlay, { backgroundColor: theme.background }]}>
+        <View
+          style={[
+            styles.loadingOverlay,
+            { backgroundColor: theme.background },
+          ]}
+        >
           <ActivityIndicator size="large" color={theme.tint} />
           <Text
             style={[
@@ -148,7 +174,12 @@ export default function WebViewScreen({ url, name }: Props) {
       )}
 
       {error ? (
-        <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
+        <View
+          style={[
+            styles.errorContainer,
+            { backgroundColor: theme.background },
+          ]}
+        >
           <Feather name="wifi-off" size={48} color={theme.textSecondary} />
           <Text
             style={[
@@ -200,6 +231,8 @@ export default function WebViewScreen({ url, name }: Props) {
           thirdPartyCookiesEnabled
           domStorageEnabled
           javaScriptEnabled
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
           userAgent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"
         />
       )}
