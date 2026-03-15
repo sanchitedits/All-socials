@@ -15,7 +15,7 @@ export type Platform = {
 
 const STORAGE_KEY = "@message_hub_platforms";
 
-const DEFAULT_PLATFORMS: Platform[] = [
+export const DEFAULT_PLATFORMS: Platform[] = [
   {
     id: "instagram",
     name: "Instagram",
@@ -54,7 +54,17 @@ export function PlatformsProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
-        setPlatforms(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        // Guard: fall back to defaults if parsed value is not a non-empty array
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setPlatforms(parsed);
+        } else {
+          setPlatforms(DEFAULT_PLATFORMS);
+          await AsyncStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(DEFAULT_PLATFORMS)
+          );
+        }
       } else {
         setPlatforms(DEFAULT_PLATFORMS);
         await AsyncStorage.setItem(
@@ -64,6 +74,15 @@ export function PlatformsProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to load platforms:", error);
+      // On any parse/storage error, reset to defaults so the app never crashes
+      try {
+        await AsyncStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(DEFAULT_PLATFORMS)
+        );
+      } catch {
+        // Storage unavailable — just use in-memory defaults
+      }
       setPlatforms(DEFAULT_PLATFORMS);
     } finally {
       setLoading(false);
@@ -71,8 +90,15 @@ export function PlatformsProvider({ children }: { children: React.ReactNode }) {
   };
 
   const savePlatforms = async (updated: Platform[]) => {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    setPlatforms(updated);
+    // Always keep at least the defaults so the navigator never gets 0 routes
+    const safe =
+      updated.length > 0 ? updated : DEFAULT_PLATFORMS;
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(safe));
+    } catch (error) {
+      console.error("Failed to persist platforms:", error);
+    }
+    setPlatforms(safe);
   };
 
   const addPlatform = useCallback(
@@ -105,6 +131,7 @@ export function PlatformsProvider({ children }: { children: React.ReactNode }) {
 
 export function usePlatforms() {
   const ctx = useContext(PlatformsContext);
-  if (!ctx) throw new Error("usePlatforms must be used within PlatformsProvider");
+  if (!ctx)
+    throw new Error("usePlatforms must be used within PlatformsProvider");
   return ctx;
 }

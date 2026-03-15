@@ -14,11 +14,7 @@ import {
   View,
   useColorScheme,
 } from "react-native";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  Layout,
-} from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Colors from "@/constants/colors";
@@ -38,7 +34,8 @@ export default function ManageScreen() {
   const [nameError, setNameError] = useState("");
   const [urlError, setUrlError] = useState("");
 
-  const topPadding = Platform.OS === "web" ? 67 : insets.top;
+  // This screen lives BELOW the MainNavigator header which has already
+  // consumed insets.top — so we only need bottom inset here.
   const bottomPadding = Platform.OS === "web" ? 34 : insets.bottom;
 
   const normalizeUrl = (raw: string): string => {
@@ -112,11 +109,11 @@ export default function ManageScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={0}
     >
+      {/* Section header — no top safe-area needed; parent header handles it */}
       <View
         style={[
           styles.header,
           {
-            paddingTop: topPadding + 12,
             backgroundColor: theme.surface,
             borderBottomColor: theme.border,
           },
@@ -148,6 +145,7 @@ export default function ManageScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {/* ── Add Platform ── */}
         <View style={styles.section}>
           <Text
             style={[
@@ -286,6 +284,7 @@ export default function ManageScreen() {
           </View>
         </View>
 
+        {/* ── Platform List ── */}
         <View style={styles.section}>
           <Text
             style={[
@@ -307,7 +306,10 @@ export default function ManageScreen() {
               <Text
                 style={[
                   styles.emptyText,
-                  { color: theme.textSecondary, fontFamily: "Inter_400Regular" },
+                  {
+                    color: theme.textSecondary,
+                    fontFamily: "Inter_400Regular",
+                  },
                 ]}
               >
                 No platforms yet. Add one above.
@@ -355,7 +357,10 @@ export default function ManageScreen() {
                       <Text
                         style={[
                           styles.platformName,
-                          { color: theme.text, fontFamily: "Inter_600SemiBold" },
+                          {
+                            color: theme.text,
+                            fontFamily: "Inter_600SemiBold",
+                          },
                         ]}
                         numberOfLines={1}
                       >
@@ -398,6 +403,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
+    paddingTop: 20,
     paddingBottom: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },

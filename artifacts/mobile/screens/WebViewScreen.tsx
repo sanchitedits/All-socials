@@ -19,9 +19,12 @@ import Colors from "@/constants/colors";
 type Props = {
   url: string;
   name: string;
+  // When true the screen fills the full display — safe-area padding is needed.
+  // When false the MainNavigator header above already consumes insets.top.
+  isFullscreen?: boolean;
 };
 
-export default function WebViewScreen({ url, name }: Props) {
+export default function WebViewScreen({ url, name, isFullscreen = false }: Props) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const theme = isDark ? Colors.dark : Colors.light;
@@ -32,7 +35,13 @@ export default function WebViewScreen({ url, name }: Props) {
   const [canGoForward, setCanGoForward] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const topPadding = Platform.OS === "web" ? 67 : insets.top;
+  // In fullscreen the MainNavigator header is hidden so this screen fills the
+  // display from y=0 — we must add the safe-area top ourselves.
+  // Otherwise the parent header already consumed insets.top, so just use a
+  // small fixed gap for visual breathing room.
+  const topPadding = isFullscreen
+    ? (Platform.OS === "web" ? 67 : insets.top)
+    : 0;
 
   useFocusEffect(
     useCallback(() => {
