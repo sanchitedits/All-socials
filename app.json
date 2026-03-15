@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "80d3410d-bc7e-4923-a555-2365f0a61180"
+      }
+    },
+    "android": {
+      "package": "com.xodophile.workspace"
+    }
+  }
+}
