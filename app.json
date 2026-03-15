@@ -2,13 +2,13 @@
   "expo": {
     "extra": {
       "eas": {
-        "projectId": "050c33be-052c-4eb8-aca0-0aadcf4dd162"
+        "projectId": "050c33be-052c-4eb8-aca0-0aadcf4ds362"
       }
     },
     "android": {
       "package": "com.xodophile.workspace"
     },
-    "owner": "xodophiles-organization",
+    "owner": "batmansanchit",
     "slug": "quantmedia",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
