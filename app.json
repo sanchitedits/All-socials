@@ -8,8 +8,8 @@
     "android": {
       "package": "com.xodophile.workspace"
     },
-    "owner": "xodophiles-organization",
-    "slug": "socialdashboard",
+    "owner": "batmansanchit",
+    "slug": "mockup-sandbox",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
       "infoPlist": {
