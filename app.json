@@ -8,7 +8,7 @@
     "android": {
       "package": "com.xodophile.workspace"
     },
-    "owner": "batmansanchit",
+    "owner": "xodophile",
     "slug": "workspacemockup-sandbox",
     "ios": {
       "bundleIdentifier": "com.xodophile.workspace",
